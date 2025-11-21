@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Testimoni - Denz Cloud Hosting</title>
+<style>
+  body{
+    background:#0b111d;
+    color:white;
+    font-family:system-ui;
+    margin:0;
+    padding:20px;
+    animation: fadeUp 0.7s ease;
+  }
+  @keyframes fadeUp {
+    0% { opacity:0; transform: translateY(20px); }
+    100% { opacity:1; transform: translateY(0); }
+  }
+  h1{
+    text-align:center;
+    margin-bottom:25px;
+    text-shadow:0 0 12px rgba(0,123,255,0.35);
+  }
+  .box{
+    background:#101725;
+    padding:20px;
+    border-radius:12px;
+    max-width:800px;
+    margin:20px auto;
+    box-shadow:0 0 15px rgba(0,0,0,0.45);
+  }
+  .pfp-wa{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:22px;
+    font-weight:600;
+    flex-shrink:0;
+  }
+  .komentar{
+    display:flex;
+    gap:15px;
+    background:#121a2b;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:15px;
+    border:1px solid rgba(255,255,255,0.05);
+  }
+  .nama{
+    font-weight:700;
+    font-size:17px;
+  }
+  .isi{
+    margin-top:5px;
+    line-height:1.4;
+  }
+  .bintang{
+    color:#fcd34d;
+    margin:5px 0;
+  }
+  input, textarea{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    background:#0f1624;
+    color:white;
+    margin-top:8px;
+  }
+  textarea{ height:80px; resize:none; }
+  button{
+    margin-top:12px;
+    padding:12px;
+    width:100%;
+    background:#1f6bff;
+    color:white;
+    font-size:17px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.2s;
+  }
+  button:hover{
+    background:#3b82ff;
+  }
+  .rating input{
+    display:none;
+  }
+  .rating label{
+    font-size:27px;
+    color:#444;
+    cursor:pointer;
+    transition:.2s;
+  }
+  .rating input:checked ~ label,
+  .rating label:hover,
+  .rating label:hover ~ label{
+    color:#fcd34d;
+  }
+  /* POPUP */
+  #popupNotif{
+    position:fixed;
+    top:-120px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#101725;
+    padding:15px 25px;
+    border-radius:12px;
+    color:white;
+    font-weight:600;
+    font-size:17px;
+    box-shadow:0 0 12px rgba(0,0,0,0.5);
+    transition:0.45s;
+    z-index:9999;
+    border-left:5px solid #79a8ff; /* warna default INFO */
+  }
+</style>
+</head>
+<body>
+
+<!-- POPUP NOTIFIKASI -->
+<div id="popupNotif"><span id="popupText">Notifikasi</span></div>
+
+<h1>Testimoni Komentar Denz Cloud</h1>
+
+<div class="box" id="listKomentar"></div>
+
+<!-- FORM KOMENTAR -->
+<div class="box">
+  <h2 style="margin-top:0;">Tulis Komentar Anda</h2>
+
+  <input type="text" id="nama" placeholder="Nama Anda">
+  <textarea id="komentar" placeholder="Tulis komentar anda..."></textarea>
+
+  <p style="margin-top:10px;">Beri rating:</p>
+
+  <div class="rating" style="text-align:center;">
+    <input type="radio" name="rate" id="5" value="5"><label for="5">★</label>
+    <input type="radio" name="rate" id="4" value="4"><label for="4">★</label>
+    <input type="radio" name="rate" id="3" value="3"><label for="3">★</label>
+    <input type="radio" name="rate" id="2" value="2"><label for="2">★</label>
+    <input type="radio" name="rate" id="1" value="1"><label for="1">★</label>
+  </div>
+
+  <button onclick="kirimKomentar()">Kirim</button>
+</div>
+
+<script>
+/* =======================
+   POPUP SESUAI PERMINTAAN
+======================= */
+function popup(msg, type="info") {
+  const box = document.getElementById("popupNotif");
+  const text = document.getElementById("popupText");
+
+  if(type === "error"){
+    text.innerHTML = `<b style="color:#ff4d4d">Error:</b> ${msg}`;
+    box.style.borderLeftColor = "#ff4d4d";
+  } else {
+    text.innerHTML = `<b style="color:#79a8ff">Info:</b> ${msg}`;
+    box.style.borderLeftColor = "#79a8ff";
+  }
+
+  box.style.top = "25px";
+  setTimeout(() => { box.style.top = "-150px"; }, 2800);
+}
+
+/* FOTO PROFIL */
+function generateColor(name) {
+  const colors = ["#6A67CE","#4C8BF5","#5CB85C","#F0A500","#D9534F","#9C27B0","#03A9F4"];
+  return colors[name.charCodeAt(0) % colors.length];
+}
+
+function generatePfp(name){
+  return `<div class="pfp-wa" style="background:${generateColor(name)}">${name.charAt(0).toUpperCase()}</div>`;
+}
+
+/* KOMENTAR NPC */
+const npcKomentar = [
+  { nama:"Keijer", isi:"Pelayanan cepat, server stabil banget. Mantap!", rate:5 },
+  { nama:"Ventra", isi:"Hosting murah tapi kualitas ga murahan!", rate:5 },
+  { nama:"Pablo", isi:"Support ramah dan fast respon. Sangat membantu!", rate:4 },
+  { nama:"Willi Salim", isi:"Panel gampang dipakai, cocok buat pemula.", rate:5 },
+  { nama:"Sultan 400k", isi:"Harga terjangkau dan performa kenceng!", rate:4 }
+];
+
+/* STORAGE */
+function loadKomentar(){ return [...npcKomentar, ...(JSON.parse(localStorage.getItem("komentarDenz"))||[])]; }
+function saveKomentar(data){ localStorage.setItem("komentarDenz", JSON.stringify(data)); }
+
+/* RENDER */
+function tampilkanKomentar(){
+  const area = document.getElementById("listKomentar");
+  area.innerHTML = "";
+  loadKomentar().forEach(c=>{
+    area.innerHTML+=`
+      <div class="komentar">
+        ${generatePfp(c.nama)}
+        <div>
+          <div class="nama">${c.nama}</div>
+          <div class="bintang">${"★".repeat(c.rate)}</div>
+          <div class="isi">${c.isi}</div>
+        </div>
+      </div>`;
+  });
+}
+
+/* =======================
+   ANTI TOXIC + BAN 2 HARI
+======================= */
+const toxicWords = [
+  "kontol","jelek","bangsat","asu","bajingan","tempek",
+  "mengecewakan","buruk","gampang ke ddos","ddos",
+  "scam","tukang scam","tukangscam"
+];
+
+function checkBan() {
+  const banData = JSON.parse(localStorage.getItem("userBan"));
+  if(!banData) return false;
+  const now = Date.now();
+  if(now<banData.until){
+    showBanScreen(banData.reason, banData.until);
+    return true;
+  } else {
+    localStorage.removeItem("userBan");
+    return false;
+  }
+}
+
+function showBanScreen(word, untilTime){
+  const endDate = new Date(untilTime);
+  const banDiv = document.createElement("div");
+  Object.assign(banDiv.style,{
+    position:"fixed",top:0,left:0,width:"100%",height:"100%",
+    background:"rgba(0,0,0,0.95)",zIndex:999999,display:"flex",
+    flexDirection:"column",justifyContent:"center",alignItems:"center",
+    color:"white",textAlign:"center",padding:"20px"
+  });
+  banDiv.innerHTML=`
+    <h1 style="color:#ff3b3b;font-size:40px;margin-bottom:15px;">🚫 Anda Telah Diban</h1>
+    <p style="font-size:20px;max-width:500px;">
+      Anda telah diban karena menggunakan kata terlarang:  
+      <b style="color:#ff6c6c">${word}</b>
+    </p>
+    <p style="margin-top:20px;font-size:18px;">
+      Ban berakhir pada:<br>
+      <b>${endDate.toLocaleString()}</b>
+    </p>`;
+  document.body.innerHTML="";
+  document.body.appendChild(banDiv);
+}
+
+/* Cek toxic sebelum submit */
+function processComment(text){
+  if(checkBan()) return false;
+  const lower=text.toLowerCase();
+  for(let bad of toxicWords){
+    if(lower.includes(bad)){
+      const banUntil = Date.now() + 48*60*60*1000;
+      localStorage.setItem("userBan",JSON.stringify({reason:bad,until:banUntil}));
+      showBanScreen(bad,banUntil);
+      return false;
+    }
+  }
+  return true;
+}
+
+/* =======================
+   DELAY + KIRIM KOMENTAR
+======================= */
+function kirimKomentar(){
+  const now = Date.now();
+  const last = localStorage.getItem("lastKomentarTime");
+  if(last && now-last<3600000){
+    popup("Tunggu "+Math.ceil((3600000-(now-last))/60000)+" menit lagi untuk komentar!","error");
+    return;
+  }
+
+  const nama = document.getElementById("nama").value.trim();
+  const isi = document.getElementById("komentar").value.trim();
+  const rate = document.querySelector("input[name='rate']:checked");
+
+  if(!nama || !isi || !rate){
+    popup("Isi semua form dan beri rating!","error");
+    return;
+  }
+
+  if(!processComment(isi)) return; // cek toxic
+
+  let data = loadKomentar().slice(npcKomentar.length);
+  data.push({nama,isi,rate:rate.value});
+  saveKomentar(data);
+  tampilkanKomentar();
+  localStorage.setItem("lastKomentarTime",now);
+
+  document.getElementById("nama").value="";
+  document.getElementById("komentar").value="";
+  document.querySelector("input[name='rate']:checked").checked=false;
+
+  popup("Komentar berhasil dikirim! (Delay 1 jam)","info");
+}
+
+tampilkanKomentar();
+checkBan();
+</script>
+
+</body>
+</html>
